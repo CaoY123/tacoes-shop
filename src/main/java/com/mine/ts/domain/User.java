@@ -1,58 +1,40 @@
 package com.mine.ts.domain;
 
-import lombok.AccessLevel;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
- * @author CaoY
- * @date 2022-12-20 17:24
- * @description 用户实体类
+ * 用户类
+ * @Creator CaoY
  */
-@Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-@RequiredArgsConstructor
-public class User {
-    
-    private Long id;
+@Setter
+@Getter
+@NoArgsConstructor
+@JsonIgnoreProperties(value = {"password"}, allowSetters = true)
+public class User implements Serializable {
 
-    private final String username;
-    private final String password;
-    private final String fullname;
-    private final String street;
-    private final String city;
-    private final String state;
-    private final String zip;
-    private final String phone;
+   /**
+    * 用户id
+    */
+   private Integer id;
 
+   /**
+    * 用户名
+    */
+   @NotEmpty(message = "用户名不能为空！")
+   private String username;
 
+   /**
+    * 密码
+    */
+   @NotEmpty(message = "密码不能为空！")
+   @Size(min = 8, message = "密码长度不能小于8！")
+   private String password;
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    // 账号是否未过期
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    // 账号是否未锁定
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    // 是否证书未过期
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    // 是否启用
-    public boolean isEnabled() {
-        return true;
-    }
 }

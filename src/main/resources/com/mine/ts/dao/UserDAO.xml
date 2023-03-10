@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace保证和Mapper接口的全类名一致-->
+<mapper namespace="com.mine.ts.dao.UserDAO">
+
+    <!--
+        resultType：设置结果类型，即查询出的数据要转换为的java类型
+        resultMap：自定义映射，处理多对一或一对多的映射
+        上述两个属性最多只能存在一个，不能同时存在
+    -->
+    <resultMap id="userResultMap" type="com.mine.ts.domain.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+    </resultMap>
+
+    <insert id="add" parameterType="com.mine.ts.domain.User">
+        insert into `user` (username, password)
+        values (#{username}, #{password})
+    </insert>
+
+    <update id="update" parameterType="com.mine.ts.domain.User">
+        update `user`
+        set password=#{password}
+        where id = #{id}
+    </update>
+
+    <select id="getById" resultMap="userResultMap">
+        select *
+        from `user`
+        where id = #{id}
+    </select>
+
+    <select id="getByUsername" resultMap="userResultMap">
+        select *
+        from `user`
+        where username = #{username}
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete from `user`
+        where id = #{id};
+    </delete>
+</mapper>

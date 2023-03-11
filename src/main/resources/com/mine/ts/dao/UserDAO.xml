@@ -23,6 +23,7 @@
     </insert>
 
     <update id="update" parameterType="com.mine.ts.domain.User">
+        /*update操作不对空的字段作判断，这个是放在service层进行*/
         update `user`
         set password=#{password}
         where id = #{id}

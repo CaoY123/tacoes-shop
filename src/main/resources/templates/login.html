@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Login/Register</title>
+</head>
+<body>
+<h1>User Login/Register</h1>
+<form id="login-form">
+  <h2>Login</h2>
+  <label for="login-username">Username:</label>
+  <input type="text" id="login-username" name="username">
+  <label for="login-password">Password:</label>
+  <input type="password" id="login-password" name="password">
+  <button type="submit">Login</button>
+</form>
+<form id="register-form">
+  <h2>Register</h2>
+  <label for="register-username">Username:</label>
+  <input type="text" id="register-username" name="username">
+  <label for="register-password">Password:</label>
+  <input type="password" id="register-password" name="password">
+  <label for="register-confirm-password">Confirm Password:</label>
+  <input type="password" id="register-confirm-password" name="confirmPassword">
+  <button type="submit">Register</button>
+</form>
+<p id="message"></p>
+<script>
+  const messageEl = document.getElementById('message');
+  const loginForm = document.getElementById('login-form');
+  const registerForm = document.getElementById('register-form');
+
+  loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(loginForm);
+    const response = await fetch('/login', {
+      method: 'POST',
+      body: formData,
+    });
+    const result = await response.json();
+    if (result.success) {
+      messageEl.textContent = 'Login successful!';
+    } else {
+      messageEl.textContent = `Login failed: ${result.message}`;
+    }
+  });
+
+  registerForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(registerForm);
+    const response = await fetch('/register', {
+      method: 'POST',
+      body: formData,
+    });
+    const result = await response.json();
+    if (result.success) {
+      messageEl.textContent = 'Registration successful!';
+    } else {
+      messageEl.textContent = `Registration failed: ${result.message}`;
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.mine.ts.api;
+package com.mine.ts.controller;
 
 import com.mine.ts.base.Result;
 import com.mine.ts.domain.User;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
-public class UserAPI {
+public class UserController {
 
    /**
     * session的字段名

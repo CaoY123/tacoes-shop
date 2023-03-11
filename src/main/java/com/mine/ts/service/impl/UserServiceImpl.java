@@ -1,6 +1,6 @@
 package com.mine.ts.service.impl;
 
-import com.mine.ts.api.UserAPI;
+import com.mine.ts.controller.UserController;
 import com.mine.ts.base.Result;
 import com.mine.ts.dao.UserDAO;
 import com.mine.ts.domain.User;
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
    public Result<User> isLogin(HttpSession session) {
       Result<User> result = new Result<>();
       // 从session中取出用户信息
-      User sessionUser = (User) session.getAttribute(UserAPI.SESSION_NAME);
+      User sessionUser = (User) session.getAttribute(UserController.SESSION_NAME);
       // 若session中没有用户信息这说明用户未登录
       if (sessionUser == null) {
          result.setResultFailed("用户未登录！");

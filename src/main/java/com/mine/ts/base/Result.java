@@ -33,6 +33,11 @@ public class Result<T> implements Serializable {
    private T data;
 
    /**
+    * 定位到的静态页面
+    */
+   private String pageUrl;
+
+   /**
     * 设定结果为成功
     *
     * @param msg  消息
@@ -53,6 +58,19 @@ public class Result<T> implements Serializable {
       this.message = msg;
       this.success = false;
       this.data = null;
+   }
+
+   /**
+    * 成功时设置 pageUrl，
+    * @param msg
+    * @param data
+    * @param pageUrl 重定向是需要加 redirect 前缀
+    */
+   public void setResultSuccess(String msg, T data, String pageUrl) {
+      this.message = msg;
+      this.success = true;
+      this.data = data;
+      this.pageUrl = pageUrl;
    }
 
 }

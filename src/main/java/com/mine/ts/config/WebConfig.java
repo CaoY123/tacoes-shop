@@ -25,11 +25,6 @@ public class WebConfig implements WebMvcConfigurer {
       return new UserInterceptor();
    }
 
-   @Bean
-   public ResultHandlerInterceptor getResultHandlerInterceptor() {
-      return new ResultHandlerInterceptor();
-   }
-
    @Override
    public void addViewControllers(ViewControllerRegistry registry) {
       registry.addViewController("/").setViewName("home");
@@ -43,9 +38,6 @@ public class WebConfig implements WebMvcConfigurer {
       List<String> pathPatterns = new ArrayList<>();
       pathPatterns.add("/update");
       registry.addInterceptor(getUserInterceptor()).addPathPatterns(pathPatterns);
-
-      // 添加结果处理拦截器
-      registry.addInterceptor(getResultHandlerInterceptor());
    }
 
 }

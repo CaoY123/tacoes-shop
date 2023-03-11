@@ -28,6 +28,9 @@ public class WebConfig implements WebMvcConfigurer {
    @Override
    public void addViewControllers(ViewControllerRegistry registry) {
       registry.addViewController("/").setViewName("home");
+      registry.addViewController("/login").setViewName("login");
+      registry.addViewController("/register").setViewName("register");
+      registry.addViewController("/design").setViewName("design");
    }
 
    /**
@@ -37,6 +40,7 @@ public class WebConfig implements WebMvcConfigurer {
    public void addInterceptors(InterceptorRegistry registry) {
       List<String> pathPatterns = new ArrayList<>();
       pathPatterns.add("/update");
+      pathPatterns.add("/design");
       registry.addInterceptor(getUserInterceptor()).addPathPatterns(pathPatterns);
 
    }

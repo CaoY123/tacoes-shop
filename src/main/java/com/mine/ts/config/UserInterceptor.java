@@ -21,9 +21,9 @@ public class UserInterceptor implements HandlerInterceptor {
    @Override
    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
       // 同样在这里调用用户服务传入 session，判断用户是否登录或者有效
-      // 未登录则重定向至主页（假设主页就是/）
       if (!userService.isLogin(request.getSession()).isSuccess()) {
-         response.sendRedirect("/home");
+         response.sendRedirect("/login");
+//         request.getRequestDispatcher("/.html").forward(request,response);
          return false;
       }
       return true;

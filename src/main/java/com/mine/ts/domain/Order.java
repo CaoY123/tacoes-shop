@@ -44,7 +44,5 @@ public class Order implements Serializable {
 
     private User user;// 用户 与 订单是一对多的关系
 
-    private String jsonTacos;
-
     List<Taco> tacos = new ArrayList<>();
 }

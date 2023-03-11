@@ -2,6 +2,7 @@ package com.mine.ts.domain;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,11 +20,12 @@ public class Taco {
 
     private Date createdAt;
 
-    void createdAt() {
-        createdAt = new Date();
-    }
-
     private String name;
 
-    private List<Ingredient> ingredients = new ArrayList<>();// 成分
+    private List<Ingredient> ingredients;// 成分
+
+    public Taco() {
+        ingredients = new ArrayList<>();
+        createdAt = new Date();
+    }
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace保证和Mapper接口的全类名一致-->
+<mapper namespace="com.mine.ts.dao.IngredientDAO">
+
+    <!--Ingredient结果映射-->
+    <resultMap id="ingredientMap" type="com.mine.ts.domain.Ingredient">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="type" property="type"></result>
+    </resultMap>
+
+    <insert id="add" parameterType="com.mine.ts.domain.Ingredient">
+        insert into `ingredient` (`name`, `type`)
+        values (#{name}, #{type});
+    </insert>
+
+    <!--带判空条件的更新-->
+    <update id="update" parameterType="com.mine.ts.domain.Ingredient">
+        update `ingredient`
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type}
+            </if>
+        </set>
+        <where>
+            id = #{id};
+        </where>
+    </update>
+
+    <select id="getById" parameterType="int" resultMap="ingredientMap">
+        select id, name, type
+        from ingredient
+        where id = #{id};
+    </select>
+
+    <select id="getByName" parameterType="string" resultMap="ingredientMap">
+        select id, name, type
+        from ingredient
+        where `name` = #{name};
+    </select>
+
+    <select id="getByType" parameterType="string" resultMap="ingredientMap">
+        select id, name, type
+        from ingredient
+        where type = #{type};
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete from `ingredient`
+        where id = #{id};
+    </delete>
+</mapper>

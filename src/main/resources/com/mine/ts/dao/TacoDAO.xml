@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace保证和Mapper接口的全类名一致-->
+<mapper namespace="com.mine.ts.dao.TacoDAO">
+
+    <!--Taco类的结果映射-->
+    <resultMap id="tacoResultMap" type="com.mine.ts.domain.Taco">
+        <id column="taco_id" property="id"></id>
+        <result column="created_at" property="createdAt"></result>
+        <result column="taco_name" property="name"></result>
+        <collection property="ingredients" ofType="com.mine.ts.domain.Ingredient">
+            <id column="ingredient_id" property="id"></id>
+            <result column="ingredient_name" property="name"></result>
+            <result column="type" property="type"></result>
+        </collection>
+    </resultMap>
+
+    <!--创建时间由数据库层面设置，
+        注意：我们这里的插入同时也要往tacoes_ingredients中插入多条记录
+    -->
+    <insert id="add" parameterType="com.mine.ts.domain.Taco">
+        <!-- 使用<selectKey>获取自动生成的ID -->
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+        <!-- 插入 taco 表 -->
+        INSERT INTO `taco` (`name`)
+        VALUES (#{name});
+
+        <!-- 插入AB表，使用MyBatis的动态SQL拼接多个insert语句 -->
+        <foreach collection="bs" item="b" index="index" separator=";">
+            INSERT INTO `tacoes_ingredients`(`id`, ``)
+        </foreach>
+    </insert>
+    
+    <!--主要是更改名字，如果允许更改配料表，这会使得我们的设计很复杂，不好实现-->
+    <update id="update" parameterType="com.mine.ts.domain.Taco">
+        update `taco`
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name}
+            </if>
+        </set>
+    </update>
+
+    <select id="getById" parameterType="long" resultMap="tacoResultMap">
+        select t.id as `taco_id`,
+               t.created_at as `created_at`,
+               t.`name` as `taco_name`,
+               ig.id as `ingredient_id`,
+               ig.name as `ingredient_name`,
+               ig.type as `type`
+        from `taco` t
+        left join `tacos_ingredients` ti on t.id = ti.taco_id
+        left join `ingredient` ig on ti.ingredient_id = ig.id
+        where id = #{id};
+    </select>
+
+
+</mapper>

@@ -1,23 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Sample Page</title>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <title>设计你的卷饼</title>
+    <!--可以找到这个result，-->
+    <div th:if="${result != null}">
+        <p th:text="${result.data}"></p>
+    </div>
 </head>
 <body>
-
-<div id="result"></div>
-
-<script>
-    $.ajax({
-        url: "/design",
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-            $("#result").text(data.message);
-        }
-    });
-</script>
 
 </body>
 </html>

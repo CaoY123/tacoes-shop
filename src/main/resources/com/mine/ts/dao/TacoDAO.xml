@@ -7,6 +7,20 @@
 <mapper namespace="com.mine.ts.dao.TacoDAO">
 
     <!--Taco类的结果映射-->
+    <insert id="add" parameterType="com.mine.ts.domain.Taco" useGeneratedKeys="true">
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+        <if test="name != null and name != ''">
+            INSERT INTO `taco` (`name`)
+            VALUES (#{name});
+        </if>
+    </insert>
+
+    <!--创建时间由数据库层面设置，
+        注意：我们这里的插入同时也要往tacoes_ingredients中插入多条记录
+    -->
+    <!-- 使用<selectKey>获取自动生成的ID，这里的id将在下面向 tacos_ingredients 中插入数据时使用 -->
     <resultMap id="tacoResultMap" type="com.mine.ts.domain.Taco">
         <id column="taco_id" property="id"></id>
         <result column="created_at" property="createdAt"></result>
@@ -18,24 +32,6 @@
         </collection>
     </resultMap>
 
-    <!--创建时间由数据库层面设置，
-        注意：我们这里的插入同时也要往tacoes_ingredients中插入多条记录
-    -->
-    <insert id="add" parameterType="com.mine.ts.domain.Taco">
-        <!-- 使用<selectKey>获取自动生成的ID -->
-        <selectKey keyProperty="id" resultType="long" order="AFTER">
-            SELECT LAST_INSERT_ID();
-        </selectKey>
-        <!-- 插入 taco 表 -->
-        INSERT INTO `taco` (`name`)
-        VALUES (#{name});
-
-        <!-- 插入AB表，使用MyBatis的动态SQL拼接多个insert语句 -->
-        <foreach collection="bs" item="b" index="index" separator=";">
-            INSERT INTO `tacoes_ingredients`(`id`, ``)
-        </foreach>
-    </insert>
-    
     <!--主要是更改名字，如果允许更改配料表，这会使得我们的设计很复杂，不好实现-->
     <update id="update" parameterType="com.mine.ts.domain.Taco">
         update `taco`
@@ -59,5 +55,43 @@
         where id = #{id};
     </select>
 
+    <select id="getByName" parameterType="string" resultMap="tacoResultMap">
+        select t.id as taco_id,
+               t.created_at as `created_at`,
+               t.`name` as `taco_name`,
+               ig.id as `ingredient_id`,
+               ig.name as `ingredient_name`,
+               ig.type as `type`
+        from taco t
+        left join tacos_ingredients ti on t.id = ti.taco_id
+        left join ingredient ig on ti.ingredient_id = ig.id
+        where t.name = #{name};
+    </select>
 
+    <select id="getBetweenDur" parameterType="date" resultMap="tacoResultMap">
+        select t.id as taco_id,
+               t.created_at as `created_at`,
+               t.`name` as `taco_name`,
+               ig.id as `ingredient_id`,
+               ig.name as `ingredient_name`,
+               ig.type as `type`
+        from taco t
+                 left join tacos_ingredients ti on t.id = ti.taco_id
+                 left join ingredient ig on ti.ingredient_id = ig.id
+        where t.created_at between #{begin} and #{end};
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete from taco
+        where id = #{id};
+
+        delete from `tacos_ingredients`
+        where `taco_id` = #{id};
+    </delete>
+
+    <select id="getIngredients" resultType="com.mine.ts.domain.Ingredient" parameterType="int">
+        select id, `name`, type
+        from tacos_ingredients ti
+        left join ingredient ig on ti.ingredient_id = ig.id;
+    </select>
 </mapper>

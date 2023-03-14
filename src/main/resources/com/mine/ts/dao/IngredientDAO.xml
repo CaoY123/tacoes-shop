@@ -52,8 +52,18 @@
         where type = #{type};
     </select>
 
+    <!--删除的时候顺便删除 tacos_ingredients -->
     <delete id="delete" parameterType="int">
         delete from `ingredient`
         where id = #{id};
+
+        delete from `tacos_ingredients`
+        where ingredient_id = #{id};
     </delete>
+
+    <select id="getIngredients" parameterType="int" resultMap="ingredientMap">
+        select id, `name`, `type`
+        from tacos_ingredients ts
+        left join ingredient ig on ts.ingredient_id = ig.id;
+    </select>
 </mapper>
